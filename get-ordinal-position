@@ -1,0 +1,23 @@
+function getOrdinalPosition($number) {
+    // Make sure $number is a positive integer
+    if (!is_numeric($number) || $number < 1 || floor($number) != $number) {
+        return "Invalid input";
+    }
+
+    // Define an array of suffixes for ordinal positions
+    $suffixes = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
+
+    // Get the last digit of the number
+    $lastDigit = $number % 10;
+
+    // Determine the suffix based on the last digit
+    $suffix = ($number % 100 >= 11 && $number % 100 <= 13) ? 'th' : $suffixes[$lastDigit];
+
+    // Return the ordinal position
+    return $number . $suffix;
+}
+
+// Example usage:
+$number = 42;
+$ordinalPosition = getOrdinalPosition($number);
+echo "The ordinal position of $number is $ordinalPosition"; // Output: "The ordinal position of 42 is 42nd"
