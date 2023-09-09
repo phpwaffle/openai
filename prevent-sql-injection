@@ -1,0 +1,55 @@
+<?php
+function executeSafeSQL($pdo, $sql, $params = array()) {
+    try {
+        // Prepare the SQL statement
+        $stmt = $pdo->prepare($sql);
+
+        // Bind parameters if provided
+        foreach ($params as $paramName => $paramValue) {
+            $stmt->bindValue($paramName, $paramValue);
+        }
+
+        // Execute the prepared statement
+        $stmt->execute();
+
+        // Return the result set (if needed)
+        return $stmt;
+    } catch (PDOException $e) {
+        // Handle any errors here
+        // You might log the error or take appropriate actions
+        // For security, avoid displaying specific error messages to the user
+        die("Database error: " . $e->getMessage());
+    }
+}
+
+// Example usage
+$servername = "your_server_name";
+$username = "your_username";
+$password = "your_password";
+$dbname = "your_database_name";
+
+try {
+    // Create a new PDO instance
+    $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+
+    // Define your SQL query
+    $userInput = $_POST['user_input']; // Replace with your actual user input
+    $sql = "SELECT * FROM your_table WHERE column_name = :input";
+
+    // Bind the user input to the query
+    $params = array(':input' => $userInput);
+
+    // Execute the SQL query using the function
+    $result = executeSafeSQL($pdo, $sql, $params);
+
+    // Fetch and process the result set (if needed)
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        // Do something with the data
+        echo $row['column_name'];
+    }
+} catch (PDOException $e) {
+    // Handle database connection errors here
+    // You might log the error or take appropriate actions
+    die("Connection failed: " . $e->getMessage());
+}
+?>
