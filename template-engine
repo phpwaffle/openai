@@ -1,0 +1,52 @@
+<?php
+class TemplateEngine {
+    private $variables = array();
+
+    public function assign($variable, $value) {
+        $this->variables[$variable] = $value;
+    }
+
+    public function render($templateFile) {
+        if (file_exists($templateFile)) {
+            ob_start(); // Start output buffering
+            include $templateFile;
+            $output = ob_get_clean(); // Get the buffered content and clean the buffer
+
+            foreach ($this->variables as $key => $value) {
+                $output = str_replace("{{" . $key . "}}", $value, $output);
+            }
+
+            echo $output;
+        } else {
+            throw new Exception("Template file not found: $templateFile");
+        }
+    }
+}
+
+// Example usage:
+$template = new TemplateEngine();
+
+// Assign variables
+$template->assign("title", "Sample Page");
+$template->assign("content", "This is the content of the page.");
+
+// Render the template
+$template->render("template.php");
+?>
+
+
+
+
+.. template.php below
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+    <p>{{content}}</p>
+</body>
+</html>
