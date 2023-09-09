@@ -1,0 +1,17 @@
+function getPercentage($digit, $total) {
+    // Make sure $total is not zero to avoid division by zero
+    if ($total == 0) {
+        return "Total cannot be zero";
+    }
+
+    // Calculate the percentage value
+    $percentage = ($digit / $total) * 100;
+
+    return $percentage;
+}
+
+// Example usage:
+$digit = 25;
+$total = 100;
+$percentage = getPercentage($digit, $total);
+echo "$digit is $percentage% of $total"; // Output: "25 is 25% of 100"
