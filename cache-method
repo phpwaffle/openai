@@ -1,0 +1,71 @@
+<?php
+class SimpleCache {
+    private $cache = array();
+    private $cacheExpire = array();
+
+    // Function to set a value in the cache with an optional expiration time
+    public function set($key, $value, $expire = 0) {
+        $this->cache[$key] = $value;
+
+        // Set the expiration time for this key
+        if ($expire > 0) {
+            $this->cacheExpire[$key] = time() + $expire;
+        } else {
+            unset($this->cacheExpire[$key]); // Remove expiration if it's 0
+        }
+    }
+
+    // Function to get a value from the cache
+    public function get($key) {
+        // Check if the key exists in the cache and if it's not expired
+        if (isset($this->cache[$key]) && (!$this->isExpired($key))) {
+            return $this->cache[$key];
+        }
+
+        // Return null if the key is not in the cache or has expired
+        return null;
+    }
+
+    // Function to check if a cached item has expired
+    private function isExpired($key) {
+        if (isset($this->cacheExpire[$key]) && $this->cacheExpire[$key] < time()) {
+            unset($this->cache[$key]);
+            unset($this->cacheExpire[$key]);
+            return true;
+        }
+        return false;
+    }
+
+    // Function to clear the entire cache or a specific key
+    public function clear($key = null) {
+        if ($key === null) {
+            $this->cache = array();
+            $this->cacheExpire = array();
+        } else {
+            unset($this->cache[$key]);
+            unset($this->cacheExpire[$key]);
+        }
+    }
+}
+
+// Example usage:
+$cache = new SimpleCache();
+
+// Set a value in the cache with a 60-second expiration time
+$cache->set("example_key", "Cached data", 60);
+
+// Retrieve the value from the cache
+$cachedData = $cache->get("example_key");
+
+if ($cachedData !== null) {
+    echo "Data from cache: " . $cachedData;
+} else {
+    echo "Data not found in cache.";
+}
+
+// Clear the cache for a specific key
+$cache->clear("example_key");
+
+// Clear the entire cache
+$cache->clear();
+?>
