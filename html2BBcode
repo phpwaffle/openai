@@ -1,0 +1,34 @@
+<?php
+function htmlToBBCode($html) {
+    // Define an array of HTML tags and their corresponding BBCode equivalents
+    $tags = array(
+        'b' => 'b',
+        'i' => 'i',
+        'u' => 'u',
+        'a' => 'url',
+        'img' => 'img',
+        'ul' => 'list',
+        'ol' => 'list',
+        'li' => '*',
+    );
+
+    // Use regular expressions to convert HTML tags to BBCode
+    foreach ($tags as $htmlTag => $bbTag) {
+        // Replace opening tags
+        $html = preg_replace('/<'.$htmlTag.'[^>]*>/', '['.$bbTag.']', $html);
+        // Replace closing tags
+        $html = preg_replace('/<\/'.$htmlTag.'>/', '[/'.$bbTag.']', $html);
+    }
+
+    return $html;
+}
+
+// Sample HTML content
+$htmlContent = '<b>This is bold text</b> <i>This is italic text</i> <a href="https://example.com">Visit Example</a>';
+
+// Convert HTML to BBCode
+$bbCodeContent = htmlToBBCode($htmlContent);
+
+// Output the BBCode
+echo $bbCodeContent;
+?>
